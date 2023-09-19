@@ -2,7 +2,7 @@
     Authors: 
         Gabin PAQUES,
         Marin DUDOUET,
-        Julia SERPET.
+        Julia SERPE.
 
     Created at: 19-09-2023
 
