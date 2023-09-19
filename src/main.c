@@ -20,10 +20,15 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h> // Sleep function
 
 #define MAP_SIZE 10
+#define DEAD 0
+#define ALIVE 1
+#define SLEEP_TIME 250 // In ms
 
 // ~~~~~~~~~~~~~~~~~~~~~~~ Functions Prototypes ~~~~~~~~~~~~~~~~~~~~~~~ //
+void wait(int ms); // Function to wait (in ms) because sleep() is in seconds.
 void initMap(int map[][MAP_SIZE]);
 void drawMap(int map[][MAP_SIZE]);
 
@@ -33,7 +38,7 @@ typedef enum {false, true} bool;
 // ~~~~~~~~~~~~~~~~~~~~~~~ Main ~~~~~~~~~~~~~~~~~~~~~~~ //
 int main(){
     bool isRunning = true;
-    int map[][MAP_SIZE] = { {1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    int map[][MAP_SIZE] = { {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -48,6 +53,7 @@ int main(){
     while(isRunning){
         //TODO: Game loop
         drawMap(map);
+        wait(SLEEP_TIME);
         break;
     }
 
@@ -55,10 +61,14 @@ int main(){
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~ Functions Definitions ~~~~~~~~~~~~~~~~~~~~~~~ //
+void wait(int ms){
+    sleep(ms / 1000);
+}
+
 void initMap(int map[][MAP_SIZE]){
     for(int i = 0; i < MAP_SIZE; i++){
         for(int j = 0; j < MAP_SIZE; j++){
-            map[i][j] = 0;
+            map[i][j] = DEAD;
         }
     }
 }
@@ -66,7 +76,7 @@ void initMap(int map[][MAP_SIZE]){
 void drawMap(int map[][MAP_SIZE]){
     for(int i = 0; i < MAP_SIZE; i++){
         for(int j = 0; j < MAP_SIZE; j++){
-            if(map[i][j] == 0){
+            if(map[i][j] == DEAD){
                 printf(". ");
             }
             else{
