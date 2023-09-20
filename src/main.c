@@ -15,17 +15,22 @@
     
     Compilation:
         debug:      gcc main.c -o main -Wall -Werror
-        release:    gcc main.c -o main -Wall -Werror -Wextra
+        release:    gcc main.c -o main -Wall -Werror -Wextra -O3
     
     Execution:
         ./main
+
+    Sources:
+        https://cypris.fr/loisirs/le_jeu_de_la_vie.pdf
+        https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
+        https://conwaylife.com/wiki/Main_Page
 */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h> // Sleep function
 
-#define MAP_SIZE 15 // Size of the map x * x
+#define MAP_SIZE 30 // Size of the map x * x
 #define DEAD 0
 #define ALIVE 1
 #define SLEEP_TIME 500 // Milliseconds
@@ -112,24 +117,22 @@ void updateMap(int map[][MAP_SIZE]){
 
             // /*\ /*\ /*\ /*\ RULES /*\ /*\ /*\ /*\ //
 
-            // Death by isolation
-            if( (map[i][j] == ALIVE) && ((countNeighbour == 0) || (countNeighbour == 1))){
-                newMap[i][j] = DEAD;
+            if(map[i][j] == ALIVE){
+                if(countNeighbour < 2 || countNeighbour > 3){
+                    newMap[i][j] = DEAD; // Die because of underpopulation or overpopulation
+                }
+                else{
+                    newMap[i][j] = ALIVE; // Survive
+                }
             }
-            // Death by surpopulation
-            if( (map[i][j] == ALIVE) && (countNeighbour >= 3)){
-                newMap[i][j] = DEAD;
+            else{
+                if(countNeighbour == 3){
+                    newMap[i][j] = ALIVE; // Become alive because of reproduction
+                }
+                else{
+                    newMap[i][j] = DEAD; // Stay dead
+                }
             }
-
-            // Born
-            if( (map[i][j] == DEAD) && (countNeighbour == 3) ){ 
-                newMap[i][j] = ALIVE;
-            }
-            // Survive
-            if( (map[i][j] == ALIVE) && ((countNeighbour == 2) || (countNeighbour == 3)) ){ 
-                newMap[i][j] = ALIVE; // Stay alive
-            }
-
         }
     }
 
