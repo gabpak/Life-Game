@@ -8,10 +8,10 @@
 
     Last modification at: 20-09-2023
 
-    Version: 0.1.0
+    Version: 1.0.0
 
     Description: 
-        Game life project game in C.
+        Game life project for the ECE Paris course "Programmation C".
     
     Compilation:
         debug:      gcc main.c -o main -Wall -Werror
@@ -25,32 +25,33 @@
 #include <stdio.h>
 #include <unistd.h> // Sleep function
 
-#define MAP_SIZE 20
+#define MAP_SIZE 15 // Size of the map x * x
 #define DEAD 0
 #define ALIVE 1
-#define SLEEP_TIME 1
-#define GENERATION_MAX 5
+#define SLEEP_TIME 500 // Milliseconds
 
 // ~~~~~~~~~~~~~~~~~~~~~~~ Init ~~~~~~~~~~~~~~~~~~~~~~~ //
 typedef enum {false, true} bool;
 int generation = 0;
+int generationMax = 20;
 
 // ~~~~~~~~~~~~~~~~~~~~~~~ Functions Prototypes ~~~~~~~~~~~~~~~~~~~~~~~ //
 void wait(int ms); // Function to wait (in ms) because sleep() is in seconds.
 void initMap(int map[][MAP_SIZE]);
 void updateMap(int map[][MAP_SIZE]);
 void drawMap(int map[][MAP_SIZE]);
-void askSetup(int map[][MAP_SIZE]);
+void askCoord(int map[][MAP_SIZE]);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~ Main ~~~~~~~~~~~~~~~~~~~~~~~ //
 int main(){
     bool isRunning = true;
+
     int map[MAP_SIZE][MAP_SIZE];
     initMap(map); // Init the map
 
-    askSetup(map); // Asking the points to add on the map
+    askCoord(map); // Asking the points to add on the map
 
-    while(isRunning && generation < GENERATION_MAX){
+    while(isRunning && generation < generationMax){
         generation++;
         drawMap(map);
         updateMap(map);
@@ -62,7 +63,7 @@ int main(){
 
 // ~~~~~~~~~~~~~~~~~~~~~~~ Functions Definitions ~~~~~~~~~~~~~~~~~~~~~~~ //
 void wait(int time){
-    sleep(time);
+    usleep(time * 1000); // usleep() is in microseconds so we multiply by 1000 to have milliseconds
 }
 
 void initMap(int map[][MAP_SIZE]){
@@ -111,14 +112,6 @@ void updateMap(int map[][MAP_SIZE]){
 
             // /*\ /*\ /*\ /*\ RULES /*\ /*\ /*\ /*\ //
 
-            // Born
-            if( (map[i][j] == DEAD) && (countNeighbour == 3) ){ 
-                newMap[i][j] = ALIVE;
-            }
-            // Survive
-            if( (map[i][j] == ALIVE) && ((countNeighbour == 2) || (countNeighbour == 3)) ){ 
-                newMap[i][j] = ALIVE; // Stay alive
-            }
             // Death by isolation
             if( (map[i][j] == ALIVE) && ((countNeighbour == 0) || (countNeighbour == 1))){
                 newMap[i][j] = DEAD;
@@ -127,6 +120,16 @@ void updateMap(int map[][MAP_SIZE]){
             if( (map[i][j] == ALIVE) && (countNeighbour >= 3)){
                 newMap[i][j] = DEAD;
             }
+
+            // Born
+            if( (map[i][j] == DEAD) && (countNeighbour == 3) ){ 
+                newMap[i][j] = ALIVE;
+            }
+            // Survive
+            if( (map[i][j] == ALIVE) && ((countNeighbour == 2) || (countNeighbour == 3)) ){ 
+                newMap[i][j] = ALIVE; // Stay alive
+            }
+
         }
     }
 
@@ -140,7 +143,7 @@ void updateMap(int map[][MAP_SIZE]){
 
 void drawMap(int map[][MAP_SIZE]){
     if(generation != 0){
-        printf("\nGen: %i / %i \n", generation, GENERATION_MAX);
+        printf("\nGen: %i / %i \n", generation, generationMax);
     }
 
     for(int i = 0; i < MAP_SIZE; i++){
@@ -160,8 +163,7 @@ void drawMap(int map[][MAP_SIZE]){
     }
 }
 
-void askSetup(int map[][MAP_SIZE]){
-    printf("\nEnter the coordinates of the cells between 0 and %i: \n ", MAP_SIZE - 1);
+void askCoord(int map[][MAP_SIZE]){
     printf("\nHow many points do you want to enter?: ");
     int nbPoints = 0;
     scanf("%i", &nbPoints);
@@ -179,6 +181,7 @@ void askSetup(int map[][MAP_SIZE]){
         exit(1);
     }
 
+    printf("\nEnter the coordinates of the cells between 0 and %i: \n ", MAP_SIZE - 1);
     int x, y = 0;
 
     for(int i = 0; i < nbPoints; i++){
@@ -207,5 +210,13 @@ void askSetup(int map[][MAP_SIZE]){
         map[x][y] = ALIVE;
 
         drawMap(map);
+    }
+
+    // Ask for the number of generations
+    printf("\nHow many generations do you want to see?: ");
+    scanf("%i", &generationMax);
+    if(generationMax <= 0){
+        printf("\nError: You can't enter a number less than 0.\n");
+        exit(1);
     }
 }
