@@ -40,12 +40,15 @@ void wait(int ms); // Function to wait (in ms) because sleep() is in seconds.
 void initMap(int map[][MAP_SIZE]);
 void updateMap(int map[][MAP_SIZE]);
 void drawMap(int map[][MAP_SIZE]);
+void askSetup(int map[][MAP_SIZE]);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~ Main ~~~~~~~~~~~~~~~~~~~~~~~ //
 int main(){
     bool isRunning = true;
     int map[MAP_SIZE][MAP_SIZE];
-    initMap(map);
+    initMap(map); // Init the map
+
+    askSetup(map); // Asking the points to add on the map
 
     while(isRunning && generation < GENERATION_MAX){
         generation++;
@@ -136,7 +139,10 @@ void updateMap(int map[][MAP_SIZE]){
 }
 
 void drawMap(int map[][MAP_SIZE]){
-    printf("\nGen: %i / %i \n", generation, GENERATION_MAX);
+    if(generation != 0){
+        printf("\nGen: %i / %i \n", generation, GENERATION_MAX);
+    }
+
     for(int i = 0; i < MAP_SIZE; i++){
         for(int j = 0; j < MAP_SIZE; j++){
             if(map[i][j] == DEAD){
@@ -151,5 +157,55 @@ void drawMap(int map[][MAP_SIZE]){
 
         }
         printf("\n");
+    }
+}
+
+void askSetup(int map[][MAP_SIZE]){
+    printf("\nEnter the coordinates of the cells between 0 and %i: \n ", MAP_SIZE - 1);
+    printf("\nHow many points do you want to enter?: ");
+    int nbPoints = 0;
+    scanf("%i", &nbPoints);
+
+    if(nbPoints > (MAP_SIZE * MAP_SIZE)){
+        printf("\nError: You can't enter more than %i points.\n", MAP_SIZE * MAP_SIZE);
+        exit(1);
+    }
+    if(nbPoints < 0){
+        printf("\nError: You can't enter less than 0 points.\n");
+        exit(1);
+    }
+    if(nbPoints == 0){
+        printf("\nError: You can't enter 0 points.\n");
+        exit(1);
+    }
+
+    int x, y = 0;
+
+    for(int i = 0; i < nbPoints; i++){
+        printf("\nX = ");
+        scanf("%i", &y);
+        if(y > MAP_SIZE - 1){
+            printf("\nError: You can't enter a number greater than %i.\n", MAP_SIZE - 1);
+            exit(1);
+        }
+        if(y < 0){
+            printf("\nError: You can't enter a number less than 0.\n");
+            exit(1);
+        }
+
+        printf("\nY = ");
+        scanf("%i", &x);
+        if(x > MAP_SIZE - 1){
+            printf("\nError: You can't enter a number greater than %i.\n", MAP_SIZE - 1);
+            exit(1);
+        }
+        if(x < 0){
+            printf("\nError: You can't enter a number less than 0.\n");
+            exit(1);
+        }
+
+        map[x][y] = ALIVE;
+
+        drawMap(map);
     }
 }
