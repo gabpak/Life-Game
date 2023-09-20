@@ -8,7 +8,7 @@
 
     Last modification at: 20-09-2023
 
-    Version: 0.0.1
+    Version: 0.1.0
 
     Description: 
         Game life project game in C.
