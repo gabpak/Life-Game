@@ -8,7 +8,7 @@
 
     Last modification at: 20-09-2023
 
-    Version: 1.0.0
+    Version: 1.0.1
 
     Description: 
         Game life project for the ECE Paris course "Programmation C".
@@ -49,14 +49,12 @@ void askCoord(int map[][MAP_SIZE]);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~ Main ~~~~~~~~~~~~~~~~~~~~~~~ //
 int main(){
-    bool isRunning = true;
-
     int map[MAP_SIZE][MAP_SIZE];
     initMap(map); // Init the map
 
     askCoord(map); // Asking the points to add on the map
 
-    while(isRunning && generation < generationMax){
+    while(generation < generationMax){
         generation++;
         drawMap(map);
         updateMap(map);
@@ -72,8 +70,8 @@ void wait(int time){
 }
 
 void initMap(int map[][MAP_SIZE]){
-    for(int i = 0; i < MAP_SIZE; i++){
-        for(int j = 0; j < MAP_SIZE; j++){
+    for(int i = 0; i < MAP_SIZE; ++i){
+        for(int j = 0; j < MAP_SIZE; ++j){
             map[i][j] = DEAD;
         }
     }
@@ -84,11 +82,11 @@ void updateMap(int map[][MAP_SIZE]){
     int newMap[MAP_SIZE][MAP_SIZE]; // We create a new map to not modify the current one
     initMap(newMap);
 
-    for(int i = 0; i < MAP_SIZE; i++){
-        for(int j = 0; j < MAP_SIZE; j++){
+    for(int i = 0; i < MAP_SIZE; ++i){
+        for(int j = 0; j < MAP_SIZE; ++j){
             int countNeighbour = 0;
 
-            // We count the number of neighbour
+            // We count the number of neighbours
             if((i > 0) && (map[i - 1][j] == ALIVE)){ // Left cell
                 countNeighbour++;
             }
@@ -137,8 +135,8 @@ void updateMap(int map[][MAP_SIZE]){
     }
 
     // Copy of newMap into map
-    for(int i = 0; i < MAP_SIZE; i++){
-        for(int j = 0; j < MAP_SIZE; j++){
+    for(int i = 0; i < MAP_SIZE; ++i){
+        for(int j = 0; j < MAP_SIZE; ++j){
             map[i][j] = newMap[i][j];
         }
     }
@@ -149,8 +147,8 @@ void drawMap(int map[][MAP_SIZE]){
         printf("\nGen: %i / %i \n", generation, generationMax);
     }
 
-    for(int i = 0; i < MAP_SIZE; i++){
-        for(int j = 0; j < MAP_SIZE; j++){
+    for(int i = 0; i < MAP_SIZE; ++i){
+        for(int j = 0; j < MAP_SIZE; ++j){
             if(map[i][j] == DEAD){
                 printf(". "); 
             }
@@ -187,7 +185,7 @@ void askCoord(int map[][MAP_SIZE]){
     printf("\nEnter the coordinates of the cells between 0 and %i: \n ", MAP_SIZE - 1);
     int x, y = 0;
 
-    for(int i = 0; i < nbPoints; i++){
+    for(int i = 0; i < nbPoints; ++i){
         printf("\nX = ");
         scanf("%i", &y);
         if(y > MAP_SIZE - 1){
