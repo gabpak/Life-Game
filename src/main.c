@@ -31,7 +31,7 @@
 #include <unistd.h> // Sleep function
 #include <windows.h> // Sleep function for Windows
 
-#define MAP_SIZE 30 // Size of the map x * x
+#define MAP_SIZE 30 // /!\ MAKE SURE THE .lvl FILE IS THE SAME SIZE /!\ //
 #define MAX_GENERATION 20
 #define DEAD 0
 #define ALIVE 1
