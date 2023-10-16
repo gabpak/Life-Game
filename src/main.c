@@ -8,7 +8,7 @@
 
     Last modification at: 16-10-2023
 
-    Version: 1.0.2
+    Version: 2.0.0
 
     Description: 
         Game life project for the ECE Paris course "Programmation C".
@@ -29,25 +29,25 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h> // Sleep function
+#include <windows.h> // Sleep function for Windows
 
 #define MAP_SIZE 30 // Size of the map x * x
+#define MAX_GENERATION 20
 #define DEAD 0
 #define ALIVE 1
-#define SLEEP_TIME 500 // Milliseconds
+#define SLEEP_TIME 250 // Milliseconds
 
 FILE *file = NULL;
 
 // ~~~~~~~~~~~~~~~~~~~~~~~ Init ~~~~~~~~~~~~~~~~~~~~~~~ //
 typedef enum {false, true} bool;
-int generation = 0;
-int generationMax = 20;
+int currentGeneration = 0;
 
 // ~~~~~~~~~~~~~~~~~~~~~~~ Functions Prototypes ~~~~~~~~~~~~~~~~~~~~~~~ //
 void wait(int ms); // Function to wait (in ms) because sleep() is in seconds.
 void initMap(int map[][MAP_SIZE]);
 void updateMap(int map[][MAP_SIZE]);
 void drawMap(int map[][MAP_SIZE]);
-void askCoord(int map[][MAP_SIZE]);
 void readLevel(int map[][MAP_SIZE]);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~ Main ~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -55,12 +55,16 @@ int main(){
     int map[MAP_SIZE][MAP_SIZE];
     initMap(map); // Init the map
 
-    //askCoord(map); // Asking the points to add on the map
     file = fopen("cells.lvl", "r"); // Open the file
+    if(file == NULL){
+        printf("\nERROR: main() function => file variable is null\n");
+        exit(1);
+    }
+
     readLevel(map); // Read the file
 
-    while(generation < generationMax){
-        generation++;
+    while(currentGeneration < MAX_GENERATION){
+        currentGeneration++;
         drawMap(map);
         updateMap(map);
         wait(SLEEP_TIME);
@@ -71,7 +75,7 @@ int main(){
 
 // ~~~~~~~~~~~~~~~~~~~~~~~ Functions Definitions ~~~~~~~~~~~~~~~~~~~~~~~ //
 void wait(int time){
-    usleep(time * 1000); // usleep() is in microseconds so we multiply by 1000 to have milliseconds
+    Sleep(time);
 }
 
 void initMap(int map[][MAP_SIZE]){
@@ -83,7 +87,6 @@ void initMap(int map[][MAP_SIZE]){
 }
 
 void updateMap(int map[][MAP_SIZE]){
-
     int newMap[MAP_SIZE][MAP_SIZE]; // We create a new map to not modify the current one
     initMap(newMap);
 
@@ -148,9 +151,7 @@ void updateMap(int map[][MAP_SIZE]){
 }
 
 void drawMap(int map[][MAP_SIZE]){
-    if(generation != 0){
-        printf("\nGen: %i / %i \n", generation, generationMax);
-    }
+    printf("\nGen: %i / %i \n", currentGeneration, MAX_GENERATION);
 
     for(int i = 0; i < MAP_SIZE; ++i){
         for(int j = 0; j < MAP_SIZE; ++j){
@@ -171,12 +172,12 @@ void drawMap(int map[][MAP_SIZE]){
 
 void readLevel(int map[][MAP_SIZE]){
     if(file == NULL){
-        printf("\nError: The file is NULL.\n");
+        printf("\nERROR: readLevel() function => file variable is null\n");
         exit(1);
     }
 
     char c = ' ';
-    for(int i = 0; i < MAP_SIZE + 1; ++i){
+    for(int i = 0; i < MAP_SIZE; ++i){
         for(int j = 0; j < MAP_SIZE + 1; j++){
             c = fgetc(file);
             if(c != '\n'){
@@ -186,72 +187,10 @@ void readLevel(int map[][MAP_SIZE]){
                 else if(c == '0'){
                     map[i][j] = DEAD;
                 }
+                else if(c == EOF){
+                    break;
+                }
             }
         }
-    }
-    
-    // Check for extra characters after the expected data
-    int extraChar = fgetc(file);
-    if (extraChar != EOF && extraChar != '\n') {
-        printf("\nError: Extra characters in the file.\n");
-        exit(1);
-    }
-}
-
-void askCoord(int map[][MAP_SIZE]){
-    printf("\nHow many points do you want to enter?: ");
-    int nbPoints = 0;
-    scanf("%i", &nbPoints);
-
-    if(nbPoints > (MAP_SIZE * MAP_SIZE)){
-        printf("\nError: You can't enter more than %i points.\n", MAP_SIZE * MAP_SIZE);
-        exit(1);
-    }
-    if(nbPoints < 0){
-        printf("\nError: You can't enter less than 0 points.\n");
-        exit(1);
-    }
-    if(nbPoints == 0){
-        printf("\nError: You can't enter 0 points.\n");
-        exit(1);
-    }
-
-    printf("\nEnter the coordinates of the cells between 0 and %i: \n ", MAP_SIZE - 1);
-    int x, y = 0;
-
-    for(int i = 0; i < nbPoints; ++i){
-        printf("\nX = ");
-        scanf("%i", &y);
-        if(y > MAP_SIZE - 1){
-            printf("\nError: You can't enter a number greater than %i.\n", MAP_SIZE - 1);
-            exit(1);
-        }
-        if(y < 0){
-            printf("\nError: You can't enter a number less than 0.\n");
-            exit(1);
-        }
-
-        printf("\nY = ");
-        scanf("%i", &x);
-        if(x > MAP_SIZE - 1){
-            printf("\nError: You can't enter a number greater than %i.\n", MAP_SIZE - 1);
-            exit(1);
-        }
-        if(x < 0){
-            printf("\nError: You can't enter a number less than 0.\n");
-            exit(1);
-        }
-
-        map[x][y] = ALIVE;
-
-        drawMap(map);
-    }
-
-    // Ask for the number of generations
-    printf("\nHow many generations do you want to see?: ");
-    scanf("%i", &generationMax);
-    if(generationMax <= 0){
-        printf("\nError: You can't enter a number less than 0.\n");
-        exit(1);
     }
 }
