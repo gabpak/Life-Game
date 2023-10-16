@@ -14,8 +14,8 @@
         Game life project for the ECE Paris course "Programmation C".
     
     Compilation:
-        debug:      gcc main.c -o main -Wall -Werror
-        release:    gcc main.c -o main -Wall -Werror -Wextra -O3
+        debug:      gcc main.c -o main -Wall -Werror -pedantic
+        release:    gcc main.c -o main -Wall -Werror -Wextra -pedantic -O3
     
     Execution:
         ./main
