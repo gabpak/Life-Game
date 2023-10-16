@@ -35,6 +35,8 @@
 #define ALIVE 1
 #define SLEEP_TIME 500 // Milliseconds
 
+FILE *file = NULL;
+
 // ~~~~~~~~~~~~~~~~~~~~~~~ Init ~~~~~~~~~~~~~~~~~~~~~~~ //
 typedef enum {false, true} bool;
 int generation = 0;
@@ -46,13 +48,16 @@ void initMap(int map[][MAP_SIZE]);
 void updateMap(int map[][MAP_SIZE]);
 void drawMap(int map[][MAP_SIZE]);
 void askCoord(int map[][MAP_SIZE]);
+void readLevel(int map[][MAP_SIZE]);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~ Main ~~~~~~~~~~~~~~~~~~~~~~~ //
 int main(){
     int map[MAP_SIZE][MAP_SIZE];
     initMap(map); // Init the map
 
-    askCoord(map); // Asking the points to add on the map
+    //askCoord(map); // Asking the points to add on the map
+    file = fopen("cells.lvl", "r"); // Open the file
+    readLevel(map); // Read the file
 
     while(generation < generationMax){
         generation++;
@@ -161,6 +166,35 @@ void drawMap(int map[][MAP_SIZE]){
 
         }
         printf("\n");
+    }
+}
+
+void readLevel(int map[][MAP_SIZE]){
+    if(file == NULL){
+        printf("\nError: The file is NULL.\n");
+        exit(1);
+    }
+
+    char c = ' ';
+    for(int i = 0; i < MAP_SIZE + 1; ++i){
+        for(int j = 0; j < MAP_SIZE + 1; j++){
+            c = fgetc(file);
+            if(c != '\n'){
+                if(c == '1'){
+                    map[i][j] = ALIVE;
+                }
+                else if(c == '0'){
+                    map[i][j] = DEAD;
+                }
+            }
+        }
+    }
+    
+    // Check for extra characters after the expected data
+    int extraChar = fgetc(file);
+    if (extraChar != EOF && extraChar != '\n') {
+        printf("\nError: Extra characters in the file.\n");
+        exit(1);
     }
 }
 
