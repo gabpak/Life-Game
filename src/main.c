@@ -6,9 +6,9 @@
 
     Created at: 19-09-2023
 
-    Last modification at: 20-09-2023
+    Last modification at: 16-10-2023
 
-    Version: 1.0.1
+    Version: 1.0.2
 
     Description: 
         Game life project for the ECE Paris course "Programmation C".
