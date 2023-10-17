@@ -8,10 +8,10 @@
 
     Last modification at: 17-10-2023
 
-    Version: 2.0.1
+    Version: 3.0.0
 
     Description: 
-        Game life project for the ECE Paris course "Programmation C".
+        Game life project for the ECE Paris course "Programmation C". Implementation of the graphics with the PDCurses library.
     
     Compilation (PDCurse):
         debug:      gcc  main.c -o main "pdcurses.a" -Wall -Werror -pedantic
