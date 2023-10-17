@@ -13,10 +13,10 @@
     Description: 
         Game life project for the ECE Paris course "Programmation C".
     
-    Compilation:
-        debug:      gcc main.c -o main -Wall -Werror -pedantic
-        release:    gcc main.c -o main -Wall -Werror -Wextra -pedantic -O3
-    
+    Compilation (PDCurse):
+        debug:      gcc  main.c -o main "pdcurses.a" -Wall -Werror -pedantic
+        release:    gcc  main.c -o main "pdcurses.a" -Wall -Werror -Wextra -pedantic -O3
+
     Execution:
         ./main
 
@@ -26,21 +26,18 @@
         https://conwaylife.com/wiki/Main_Page
 */
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <unistd.h> // Sleep function
-#include <windows.h> // Sleep function for Windows
+#include "curses.h"
 
 #define MAP_SIZE 40 // /!\ MAKE SURE THE .lvl FILE IS THE SAME SIZE /!\ //
 #define MAX_GENERATION 100
 #define DEAD 0
 #define ALIVE 1
-#define SLEEP_TIME 150 // Milliseconds
+#define SLEEP_TIME 25 // Milliseconds
 
 FILE *file = NULL;
 
 // ~~~~~~~~~~~~~~~~~~~~~~~ Init ~~~~~~~~~~~~~~~~~~~~~~~ //
-typedef enum {false, true} bool;
 int currentGeneration = 0;
 
 // ~~~~~~~~~~~~~~~~~~~~~~~ Functions Prototypes ~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -75,7 +72,7 @@ int main(){
 
 // ~~~~~~~~~~~~~~~~~~~~~~~ Functions Definitions ~~~~~~~~~~~~~~~~~~~~~~~ //
 void wait(int time){
-    Sleep(time);
+    sleep(time);
 }
 
 void initMap(int map[][MAP_SIZE]){
