@@ -31,11 +31,11 @@
 #include <unistd.h> // Sleep function
 #include <windows.h> // Sleep function for Windows
 
-#define MAP_SIZE 30 // /!\ MAKE SURE THE .lvl FILE IS THE SAME SIZE /!\ //
-#define MAX_GENERATION 20
+#define MAP_SIZE 40 // /!\ MAKE SURE THE .lvl FILE IS THE SAME SIZE /!\ //
+#define MAX_GENERATION 100
 #define DEAD 0
 #define ALIVE 1
-#define SLEEP_TIME 250 // Milliseconds
+#define SLEEP_TIME 150 // Milliseconds
 
 FILE *file = NULL;
 
