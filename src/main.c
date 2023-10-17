@@ -6,9 +6,9 @@
 
     Created at: 19-09-2023
 
-    Last modification at: 16-10-2023
+    Last modification at: 17-10-2023
 
-    Version: 2.0.0
+    Version: 2.0.1
 
     Description: 
         Game life project for the ECE Paris course "Programmation C".
@@ -151,6 +151,7 @@ void updateMap(int map[][MAP_SIZE]){
 }
 
 void drawMap(int map[][MAP_SIZE]){
+    system("cls");
     printf("\nGen: %i / %i \n", currentGeneration, MAX_GENERATION);
 
     for(int i = 0; i < MAP_SIZE; ++i){
@@ -162,6 +163,7 @@ void drawMap(int map[][MAP_SIZE]){
                 printf("%c ", 254u); // 254u is the code for the character "█"
             }
             else{
+                printf("\nWARNING: drawmap() function => map value is neither ALIVE or DEAD\n");
                 printf("%c ", 146u); // Random character to show that there is a problem
             }
 
@@ -175,7 +177,7 @@ void readLevel(int map[][MAP_SIZE]){
         printf("\nERROR: readLevel() function => file variable is null\n");
         exit(1);
     }
-
+    
     char c = ' ';
     for(int i = 0; i < MAP_SIZE; ++i){
         for(int j = 0; j < MAP_SIZE + 1; j++){
